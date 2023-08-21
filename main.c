@@ -13,13 +13,13 @@ int main() {
 
     int opcao;
     do {
-        printf("\nMenu de Opções:\n");
+        printf("\nMenu de Opcoes:\n");
         printf("1. Cadastrar produtos\n");
         printf("2. Retirar produto do estoque\n");
-        printf("3. Mostrar produtos abaixo do estoque mínimo\n");
+        printf("3. Mostrar produtos abaixo do estoque minimo\n");
         printf("4. Mostrar valor total dos produtos em estoque\n");
         printf("0. Sair\n");
-        printf("Escolha uma opção: ");
+        printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
 
         switch (opcao) {
@@ -39,7 +39,7 @@ int main() {
                 printf("Saindo do programa.\n");
                 break;
             default:
-                printf("Opção inválida. Escolha novamente.\n");
+                printf("Opção invalida. Escolha novamente.\n");
         }
     } while (opcao != 0);
 
@@ -50,18 +50,18 @@ void cadastrarProdutos(char descricao[][50], int estoque[][3]) {
     printf("\nCadastro de produtos:\n");
     for (int i = 0; i < 6; i++) {
         printf("Produto %d:\n", i+1);
-        printf("Descrição: ");
+        printf("Descricao: ");
         scanf("%s", descricao[i]);
 
         do {
             printf("Quantidade em estoque: ");
             scanf("%d", &estoque[i][0]);
-            printf("Quantidade mínima exigida: ");
+            printf("Quantidade minima exigida: ");
             scanf("%d", &estoque[i][1]);
         } while (estoque[i][0] < estoque[i][1]);
 
         do {
-            printf("Valor unitário: ");
+            printf("Valor unitario: ");
             scanf("%f", &estoque[i][2]);
         } while (estoque[i][2] <= 0);
     }
@@ -84,7 +84,7 @@ void retirarProduto(char descricao[][50], int estoque[][3]) {
     }
 
     if (indiceProduto == -1) {
-        printf("Produto não encontrado.\n");
+        printf("Produto nao encontrado.\n");
         return;
     }
 
@@ -100,7 +100,7 @@ void retirarProduto(char descricao[][50], int estoque[][3]) {
 }
 
 void mostrarEstoqueMinimo(char descricao[][50], int estoque[][3]) {
-    printf("\nProdutos abaixo do estoque mínimo:\n");
+    printf("\nProdutos abaixo do estoque minimo:\n");
     for (int i = 0; i < 6; i++) {
         if (estoque[i][0] < estoque[i][1]) {
             printf("Produto: %s\n", descricao[i]);

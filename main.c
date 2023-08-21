@@ -1,117 +1,136 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <string.h>
 
-// Funções para cada funcionalidade
-void cadastrarProdutos(char descricao[][50], int estoque[][3]);
-void retirarProduto(char descricao[][50], int estoque[][3]);
-void mostrarEstoqueMinimo(char descricao[][50], int estoque[][3]);
-void mostrarValorTotal(int estoque[][3]);
+#define MAX_PRODUTOS 6
 
-int main() {
-    char descricao[6][50];
-    int estoque[6][3];  // [0]: Quantidade em estoque, [1]: Quantidade mínima, [2]: Valor unitário
+char descricao_produtos[MAX_PRODUTOS][50] = {
+    "Pao com Gergilin",
+    "Alface Americana",
+    "Tomate",
+    "Queijo Cheddar",
+    "Hamburguer",
+    "Nuggets"
+};
 
-    int opcao;
-    do {
-        printf("\nMenu de Opcoes:\n");
-        printf("1. Cadastrar produtos\n");
-        printf("2. Retirar produto do estoque\n");
-        printf("3. Mostrar produtos abaixo do estoque minimo\n");
-        printf("4. Mostrar valor total dos produtos em estoque\n");
-        printf("0. Sair\n");
-        printf("Escolha uma opcao: ");
-        scanf("%d", &opcao);
+int quantidade_estoque[MAX_PRODUTOS] = {0, 0, 0, 0, 0, 0};
+int quantidade_minima[MAX_PRODUTOS] = {5, 8, 4, 15, 60, 50};
+float valor_unitario[MAX_PRODUTOS] = {1.2, 2.3, 2.7, 30.5, 3.1, 2.8};
 
-        switch (opcao) {
-            case 1:
-                cadastrarProdutos(descricao, estoque);
-                break;
-            case 2:
-                retirarProduto(descricao, estoque);
-                break;
-            case 3:
-                mostrarEstoqueMinimo(descricao, estoque);
-                break;
-            case 4:
-                mostrarValorTotal(estoque);
-                break;
-            case 0:
-                printf("Saindo do programa.\n");
-                break;
-            default:
-                printf("Opção invalida. Escolha novamente.\n");
-        }
-    } while (opcao != 0);
-
-    return 0;
-}
-
-void cadastrarProdutos(char descricao[][50], int estoque[][3]) {
-    printf("\nCadastro de produtos:\n");
-    for (int i = 0; i < 6; i++) {
-        printf("Produto %d:\n", i+1);
-        printf("Descricao: ");
-        scanf("%s", descricao[i]);
-
-        do {
-            printf("Quantidade em estoque: ");
-            scanf("%d", &estoque[i][0]);
-            printf("Quantidade minima exigida: ");
-            scanf("%d", &estoque[i][1]);
-        } while (estoque[i][0] < estoque[i][1]);
-
-        do {
-            printf("Valor unitario: ");
-            scanf("%f", &estoque[i][2]);
-        } while (estoque[i][2] <= 0);
-    }
-}
-
-void retirarProduto(char descricao[][50], int estoque[][3]) {
-    char produtoDesejado[50];
-    int quantidadeDesejada;
-
-    printf("\nRetirar produto do estoque:\n");
-    printf("Nome do produto desejado: ");
-    scanf("%s", produtoDesejado);
-
-    int indiceProduto = -1;
-    for (int i = 0; i < 6; i++) {
-        if (strcmp(descricao[i], produtoDesejado) == 0) {
-            indiceProduto = i;
-            break;
-        }
-    }
-
-    if (indiceProduto == -1) {
-        printf("Produto nao encontrado.\n");
+void cadastrar_produto(int *total_produtos) {
+    if (*total_produtos >= MAX_PRODUTOS) {
+        printf("Erro: Não é possível cadastrar mais produtos.\n");
         return;
     }
 
-    printf("Quantidade desejada: ");
-    scanf("%d", &quantidadeDesejada);
+    printf("Escolha o produto a cadastrar:\n");
+    for (int i = 0; i < MAX_PRODUTOS; i++) {
+        printf("%d. %s\n", i + 1, descricao_produtos[i]);
+    }
 
-    if (estoque[indiceProduto][0] >= quantidadeDesejada) {
-        estoque[indiceProduto][0] -= quantidadeDesejada;
-        printf("Produto retirado com sucesso.\n");
+    int escolha;
+    printf("Digite o número correspondente ao produto desejado: ");
+    scanf("%d", &escolha);
+
+    if (escolha < 1 || escolha > MAX_PRODUTOS) {
+        printf("Opção inválida.\n");
+        return;
+    }
+
+    escolha--; 
+
+    printf("Digite a quantidade em estoque para %s: ", descricao_produtos[escolha]);
+    scanf("%d", &quantidade_estoque[escolha]);
+
+   (*total_produtos)++;
+    printf("Produto cadastrado com sucesso!\n");
+
+}
+
+void retirar_produto(int total_produtos) {
+    printf("Escolha o produto a ser retirado do estoque:\n");
+    for (int i = 0; i < total_produtos; i++) {
+        printf("%d. %s\n", i + 1, descricao_produtos[i]);
+    }
+
+    int escolha;
+    printf("Digite o número correspondente ao produto desejado: ");
+    scanf("%d", &escolha);
+
+    if (escolha < 1 || escolha > total_produtos) {
+        printf("Opção inválida.\n");
+        return;
+    }
+
+    escolha--;  // Ajusta para o índice do array
+
+    int quantidade_desejada;
+    printf("Digite a quantidade desejada: ");
+    scanf("%d", &quantidade_desejada);
+
+    if (quantidade_estoque[escolha] >= quantidade_desejada) {
+        quantidade_estoque[escolha] -= quantidade_desejada;
+        printf("Produto retirado do estoque com sucesso!\n");
     } else {
         printf("Estoque insuficiente.\n");
     }
 }
-
-void mostrarEstoqueMinimo(char descricao[][50], int estoque[][3]) {
-    printf("\nProdutos abaixo do estoque minimo:\n");
-    for (int i = 0; i < 6; i++) {
-        if (estoque[i][0] < estoque[i][1]) {
-            printf("Produto: %s\n", descricao[i]);
+void mostrar_produtos_abaixo_minimo(int total_produtos) {
+    printf("Produtos com estoque abaixo do mínimo exigido:\n");
+    for (int i = 0; i < total_produtos; i++) {
+        if (quantidade_estoque[i] < quantidade_minima[i]) {
+            printf("%s\n", descricao_produtos[i]);
         }
     }
 }
 
-void mostrarValorTotal(int estoque[][3]) {
-    int valorTotal = 0;
-    for (int i = 0; i < 6; i++) {
-        valorTotal += estoque[i][0] * estoque[i][2];
+void calcular_valor_total(int total_produtos) {
+    float valor_total = 0;
+    for (int i = 0; i < total_produtos; i++) {
+        valor_total += quantidade_estoque[i] * valor_unitario[i];
     }
-    printf("\nValor total dos produtos em estoque: R$%d\n", valorTotal);
+    printf("Valor total dos produtos em estoque: R$%.2f\n", valor_total);
 }
+
+
+int main() {
+    int total_produtos = 0;
+    int opcao;
+
+    while (true) {
+        printf("\nMenu de Opções:\n");
+        printf("1. Cadastrar novo produto\n");
+        printf("2. Retirar produto do estoque\n");
+        printf("3. Mostrar produtos abaixo do estoque mínimo\n");
+        printf("4. Calcular valor total do estoque\n");
+        printf("5. Sair\n");
+
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+
+        switch (opcao) {
+            case 1:
+                cadastrar_produto(&total_produtos);
+                break;
+            case 2:
+                retirar_produto(total_produtos);
+                break;
+            case 3:
+                mostrar_produtos_abaixo_minimo(total_produtos);
+                break;
+            case 4:
+                calcular_valor_total(total_produtos);
+                break;
+            case 5:
+                printf("Saindo do sistema. Até mais!\n");
+                return 0;
+            default:
+                printf("Opção inválida. Tente novamente.\n");
+                break;
+        }
+    }
+
+    return 0;
+}
+
+

@@ -3,6 +3,7 @@
 #include <string.h>
 
 #define MAX_PRODUTOS 6
+float valor_total = 0.0;
 
 char descricao_produtos[MAX_PRODUTOS][50] = {
     "Pao com Gergilin",
@@ -62,7 +63,7 @@ void retirar_produto(int total_produtos) {
         return;
     }
 
-    escolha--;  // Ajusta para o índice do array
+    escolha--;
 
     int quantidade_desejada;
     printf("Digite a quantidade desejada: ");
@@ -85,8 +86,8 @@ void mostrar_produtos_abaixo_minimo(int total_produtos) {
 }
 
 void calcular_valor_total(int total_produtos) {
-    float valor_total = 0;
-    for (int i = 0; i < total_produtos; i++) {
+    for (int i = 0; i < MAX_PRODUTOS ; i++) {
+        
         valor_total += quantidade_estoque[i] * valor_unitario[i];
     }
     printf("Valor total dos produtos em estoque: R$%.2f\n", valor_total);
@@ -132,5 +133,3 @@ int main() {
 
     return 0;
 }
-
-

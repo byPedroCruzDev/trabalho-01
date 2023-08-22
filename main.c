@@ -96,7 +96,7 @@ void calcular_valor_total(int total_produtos) {
 
 
 int main() {
-    setlocale(LC_ALL, "pt_BR.utf8");
+    setlocale(LC_ALL, "Portuguese");
     int total_produtos = 0;
     int opcao;
 

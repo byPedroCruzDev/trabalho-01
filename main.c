@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <locale.h>
 
 #define MAX_PRODUTOS 6
 float valor_total = 0.0;
@@ -95,6 +96,7 @@ void calcular_valor_total(int total_produtos) {
 
 
 int main() {
+    setlocale(LC_ALL, "pt_BR.utf8");
     int total_produtos = 0;
     int opcao;
 

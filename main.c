@@ -93,8 +93,6 @@ void calcular_valor_total(int total_produtos) {
     }
     printf("Valor total dos produtos em estoque: R$%.2f\n", valor_total);
 }
-
-
 int main() {
     setlocale(LC_ALL,"portuguese");
     int total_produtos = 0;
